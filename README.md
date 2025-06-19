@@ -1,4 +1,4 @@
-<h1 align = "center">🏏 Rohit Sharma Innings Scraper </h1>
+<h1 align = "center">🏏 Rohit Sharma Career Scraper </h1>
 
 A Python-based web scraping project to collect all of Rohit Sharma's batting scores in international cricket since his senior debut. The data is fetched from [ESPNcricinfo](https://www.espncricinfo.com/) using BeautifulSoup and stored in CSV/Parquet formats using Pandas.
 
