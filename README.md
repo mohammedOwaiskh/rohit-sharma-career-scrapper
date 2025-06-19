@@ -52,6 +52,16 @@ The aim of this project is to:
     ```bash
     python main.py
     ```
+---
+
+## 🤝 Contributing
+Pull requests are welcome!  
+For major changes, please open an issue first to discuss what you would like to change or improve.
+
+---
+
+## 📜 License
+This project is open-source and available under the [MIT License](/LICENSE).
 
 ---
 
