@@ -20,3 +20,43 @@ The aim of this project is to:
 - Outputs data in both `.csv` and `.parquet` formats
 - Clean modular code for easy extension
 - Minimal and easy-to-follow dependencies
+
+## 🛠️ Tech Stack
+
+- **Python 3.8+**
+- **BeautifulSoup** – for HTML parsing
+- **Requests** – for making HTTP requests
+- **Pandas** – for data storage and manipulation
+- **Jupyter Notebook (optional)** – for quick analysis
+
+---
+
+## 📦 Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/rohit-innings-scraper.git
+   cd rohit-innings-scraper
+   ```
+2. **Create a virtual environment (Optional)**
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  
+    # On Windows: venv\Scripts\activate
+    ```
+3. **Install dependencies**
+    ```bash
+    pip install -r requirements.txt
+    ```
+4. **Run the scrapper**
+    ```bash
+    python main.py
+    ```
+
+---
+
+## 📬 Contact
+Created with 💙 by [Mohmmed Owais Khan](https://github.com/mohammedOwaiskh)  
+For any suggestions or queries, feel free to reach out!
+
+---
