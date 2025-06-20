@@ -68,7 +68,10 @@ def get_table():
     for format_id in __FORMATS:
 
         soup = make_request(format_id)
+
         scores_table = soup.find_all("table", class_="engineTable")[3]
+
+        # do not add data in columns list if it is already populated
         if len(columns) == 0:
             table_headers = scores_table.find_all("th")
             columns = fetch_text(table_headers)
