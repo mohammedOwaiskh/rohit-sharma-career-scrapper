@@ -20,5 +20,3 @@ def write_file(df: pd.DataFrame, filename: str):
         df.to_csv(filepath, index=False)
     elif extension == "parquet":
         df.to_parquet(filepath, index=False)
-    else:
-        raise ValueError(f"Unsupported file format {extension}")
