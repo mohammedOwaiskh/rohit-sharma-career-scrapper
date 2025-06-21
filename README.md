@@ -51,10 +51,13 @@ The aim of this project is to:
     ```
 4. **Run the scrapper**
     ```bash
-    python main.py
+    python main.py --fileformat <'csv' or 'parquet'>
     ```
 ---
+## 📊 Expected Output
 
+
+---
 ## 🤝 Contributing
 Pull requests are welcome!  
 For major changes, please open an issue first to discuss what you would like to change or improve.
