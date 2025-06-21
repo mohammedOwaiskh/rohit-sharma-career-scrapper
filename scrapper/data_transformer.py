@@ -1,4 +1,3 @@
-import os
 import pandas as pd
 from .utils import get_output_filepath
 
@@ -17,9 +16,9 @@ def write_file(df: pd.DataFrame, filename: str):
 
     filepath, extension = get_output_filepath(filename)
 
-    if format == "csv":
+    if extension == "csv":
         df.to_csv(filepath, index=False)
-    elif format == "parquet":
+    elif extension == "parquet":
         df.to_parquet(filepath, index=False)
     else:
-        raise ValueError(f"Unsupported file format {format}")
+        raise ValueError(f"Unsupported file format {extension}")

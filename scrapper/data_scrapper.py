@@ -49,7 +49,7 @@ def fetch_text(tags: list):
     return [tag.text.strip() for tag in tags if tag.text.strip() != ""]
 
 
-def get_table():
+def get_scores_table():
     """
     Fetches and parses match data tables for different cricket formats.
     Iterates over predefined format identifiers, sends HTTP requests to retrieve
@@ -79,7 +79,12 @@ def get_table():
 
         rows = scores_table.find_all("tr", class_="data1")
         for row in rows:
-            data_row = row.find_all("td")
-            data.append(fetch_text(data_row))
+            row_data = row.find_all("td")
+            trimmed_rd = fetch_text(row_data)
+
+            match_url = __BASE_URL + row_data[-1].find("a").get("href").strip()
+            trimmed_rd[-1] = match_url
+
+            data.append(trimmed_rd)
 
     return columns, data

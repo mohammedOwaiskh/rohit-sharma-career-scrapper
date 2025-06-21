@@ -28,6 +28,7 @@ The aim of this project is to:
 - **Requests** – for making HTTP requests
 - **Pandas** – for data storage and manipulation
 - **Jupyter Notebook (optional)** – for quick analysis
+- **PyTest** - For unit testing
 
 ---
 
@@ -40,9 +41,9 @@ The aim of this project is to:
    ```
 2. **Create a virtual environment (Optional)**
     ```bash
-    python -m venv venv
-    source venv/bin/activate  
-    # On Windows: venv\Scripts\activate
+    python -m venv .venv
+    source .venv/bin/activate  
+    # On Windows: .venv\Scripts\activate
     ```
 3. **Install dependencies**
     ```bash
