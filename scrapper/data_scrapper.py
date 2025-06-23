@@ -1,7 +1,11 @@
+import dis
+import logging
 from typing import Literal
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
+
+log = logging.getLogger(__name__)
 
 __BASE_URL = "https://stats.espncricinfo.com"
 
@@ -25,7 +29,7 @@ __HEADER = {
 def make_request(
     format_id: int,
     type: Literal["batting", "allround"],
-    view_by: Literal["innings", "results", "awards_match"],
+    view_by: Literal["innings", "results", "awards_match", "dismissal_list"],
 ):
     """
     Sends an HTTP GET request to the ESPN Cricinfo URL and returns a BeautifulSoup object of the page content.
@@ -68,7 +72,7 @@ def get_scores_table() -> pd.DataFrame:
     Returns:
         pd.DataFrame: A DataFrame containing the scores data for all formats, with columns for each statistic and the match URL.
     """
-
+    log.debug("Scrapping scores table...")
     columns = []
     data = []
 
@@ -82,6 +86,7 @@ def get_scores_table() -> pd.DataFrame:
         if len(columns) == 0:
             table_headers = scores_table.find_all("th")
             columns = fetch_text(table_headers)
+            columns.append("format")
             columns.append("match_id")
 
         rows = scores_table.find_all("tr", class_="data1")
@@ -91,15 +96,27 @@ def get_scores_table() -> pd.DataFrame:
 
             match_url = row_data[-1].find("a").get("href").strip()
             match_id = match_url.split("/")[-1].split(".")[0]
-            trimmed_rd[-1] = match_id
+            trimmed_rd.append(match_id)
 
             data.append(trimmed_rd)
+
+    log.debug("Scrapped Scores table")
 
     scores_df = pd.DataFrame(data, columns=columns)
     return scores_df
 
 
 def get_match_awards_table() -> pd.DataFrame:
+    """
+    Fetches and returns a DataFrame containing match awards won by Rohit Sharma across different formats.
+    Returns:
+        pd.DataFrame: A DataFrame with columns ['award', 'date', 'match_id'] where each row contains
+        the award name, date of the match, and the match ID for each award received across all formats.
+    Notes:
+        - Uses the make_request and fetch_text helper functions to retrieve and process HTML data.
+    """
+    log.debug("Scrapping awards table")
+
     columns = ["award", "date", "match_id"]
     data = []
 
@@ -108,12 +125,6 @@ def get_match_awards_table() -> pd.DataFrame:
         soup = make_request(format_id, "allround", "awards_match")
 
         awards_table = soup.find_all("table", class_="engineTable")[3]
-
-        # # do not add data in columns list if it is already populated
-        # if len(columns) == 0:
-        #     table_headers = scores_table.find_all("th")
-        #     columns = fetch_text(table_headers)
-        #     columns.append("Match_Url")
 
         rows = awards_table.find_all("tr", class_="data1")
         for row in rows:
@@ -126,11 +137,24 @@ def get_match_awards_table() -> pd.DataFrame:
 
             data.append([trimmed_rd[0], trimmed_rd[-2], trimmed_rd[-1]])
 
-    scores_df = pd.DataFrame(data, columns=columns)
-    return scores_df
+    log.debug("Scrapped Awards table")
+
+    match_awards_df = pd.DataFrame(data, columns=columns)
+    return match_awards_df
 
 
 def get_match_results_table() -> pd.DataFrame:
+    """
+    Scrapes and returns a DataFrame containing results of matches played by Rohit Sharma across different cricket formats.
+    Iterates over predefined cricket formats, sends HTTP requests to fetch match result tables,
+    parses the HTML to extract relevant data (result, date, and match ID) for each match,
+    and compiles the information into a pandas DataFrame.
+    Returns:
+        pd.DataFrame: A DataFrame with columns ['result', 'date', 'match_id'] containing
+                      the match result, date, and unique match identifier for each match.
+    """
+    log.debug("Scrapping Results table")
+
     columns = ["result", "date", "match_id"]
     data = []
 
@@ -150,6 +174,58 @@ def get_match_results_table() -> pd.DataFrame:
             trimmed_rd[-1] = match_id
 
             data.append([trimmed_rd[0], trimmed_rd[-2], trimmed_rd[-1]])
+
+    log.debug("Scrapped Results table")
+
+    scores_df = pd.DataFrame(data, columns=columns)
+    return scores_df
+
+
+def get_dismissal_list() -> pd.DataFrame:
+    """
+    Scrapes and returns a DataFrame containing dismissal information for Rohit Sharma across different cricket formats.
+    The function iterates over predefined cricket formats, scrapes the dismissal list table for each format,
+    and extracts relevant details such as dismissal type, bowler, inning, and match ID. The data is compiled
+    into a pandas DataFrame with columns: 'dismissal_type', 'bowler', 'inning', and 'match_id'.
+    Returns:
+        pd.DataFrame: A DataFrame containing dismissal details for each match and format.
+    """
+
+    log.debug("Scrapping Dissmisal List table")
+
+    columns = ["dismissal_type", "bowler", "inning", "match_id"]
+    data = []
+
+    for format_id in __FORMATS:
+
+        soup = make_request(format_id, "batting", "dismissal_list")
+
+        scores_table = soup.find_all("table", class_="engineTable")[3]
+
+        rows = scores_table.find_all("tr", class_="data1")
+        for row in rows:
+            row_data = row.find_all("td")
+            trimmed_rd = fetch_text(row_data)
+
+            match_url = row_data[-1].find("a").get("href").strip()
+            match_id = match_url.split("/")[-1].split(".")[0]
+            trimmed_rd[-1] = match_id
+
+            dismissal_type = trimmed_rd[0]
+            if dismissal_type in ("not out", "TDNB", "DNB", "retired notout"):
+                data.append([dismissal_type, "", trimmed_rd[-5], trimmed_rd[-1]])
+            elif dismissal_type in ("stumped", "caught"):
+                data.append(
+                    [dismissal_type, trimmed_rd[2], trimmed_rd[-5], trimmed_rd[-1]]
+                )
+            else:
+                if len(trimmed_rd) == 7:
+                    data.append([dismissal_type, "", trimmed_rd[-5], trimmed_rd[-1]])
+                else:
+                    data.append(
+                        [dismissal_type, trimmed_rd[1], trimmed_rd[-5], trimmed_rd[-1]]
+                    )
+    log.debug("Scrapped Dismissal table")
 
     scores_df = pd.DataFrame(data, columns=columns)
     return scores_df
