@@ -56,6 +56,11 @@ The aim of this project is to:
 ---
 ## 📊 Expected Output
 
+After running the scrapper, you will get a rohit_sharma_career data as following:
+
+| runs | balls_faced | fours | sixes | strike_rate | 	position_batted | bowler | dismissal_type | result | potm | date | inning | opposition | venue | format |
+|------|-------------|-------|-------|-------------|--------------------|--------|----------------|--------|------|------|--------|------------|-------|--------|
+| 40 | 37 | 5 | 1 | 108.1 | 3 |  | not out | won | no | 2007-04-03 | 2 | Baroda | Wankhede | Twenty20 |
 
 ---
 ## 🤝 Contributing
