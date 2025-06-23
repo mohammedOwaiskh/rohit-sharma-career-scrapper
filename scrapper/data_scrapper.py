@@ -89,8 +89,9 @@ def get_scores_table() -> pd.DataFrame:
             row_data = row.find_all("td")
             trimmed_rd = fetch_text(row_data)
 
-            # match_url = __BASE_URL + row_data[-1].find("a").get("href").strip()
-            # trimmed_rd[-1] = match_url
+            match_url = row_data[-1].find("a").get("href").strip()
+            match_id = match_url.split("/")[-1].split(".")[0]
+            trimmed_rd[-1] = match_id
 
             data.append(trimmed_rd)
 
@@ -119,6 +120,10 @@ def get_match_awards_table() -> pd.DataFrame:
             row_data = row.find_all("td")
             trimmed_rd = fetch_text(row_data)
 
+            match_url = row_data[-1].find("a").get("href").strip()
+            match_id = match_url.split("/")[-1].split(".")[0]
+            trimmed_rd[-1] = match_id
+
             data.append([trimmed_rd[0], trimmed_rd[-2], trimmed_rd[-1]])
 
     scores_df = pd.DataFrame(data, columns=columns)
@@ -139,6 +144,10 @@ def get_match_results_table() -> pd.DataFrame:
         for row in rows:
             row_data = row.find_all("td")
             trimmed_rd = fetch_text(row_data)
+
+            match_url = row_data[-1].find("a").get("href").strip()
+            match_id = match_url.split("/")[-1].split(".")[0]
+            trimmed_rd[-1] = match_id
 
             data.append([trimmed_rd[0], trimmed_rd[-2], trimmed_rd[-1]])
 
