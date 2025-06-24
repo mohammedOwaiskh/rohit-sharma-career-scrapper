@@ -18,6 +18,7 @@ The aim of this project is to:
 - Scrapes match-wise batting scores for Rohit Sharma
 - Supports all international (Test, ODI, T20i) as well as domestic (IPL, Ranji Trophy) formats
 - Outputs data in both `.csv` and `.parquet` formats
+- Clean and transformed output data for quick analysis
 - Clean modular code for easy extension
 - Minimal and easy-to-follow dependencies
 
